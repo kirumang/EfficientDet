@@ -195,11 +195,12 @@ class CSVGenerator(Generator):
         self.detect_text = detect_text
 
         # Take base_dir from annotations file if not explicitly specified.
+        
         if self.base_dir is None:
-            if osp.exists(csv_data_file):
-                self.base_dir = ''
-            else:
-                self.base_dir = osp.dirname(csv_data_file)
+        #    if osp.exists(csv_data_file):
+        #        self.base_dir = ''
+        #    else:
+             self.base_dir = osp.dirname(csv_data_file) #synchronized with original keras-retinanet
 
         # parse the provided class file
         try:
@@ -284,7 +285,7 @@ class CSVGenerator(Generator):
         Load an image at the image_index.
         """
         image = cv2.imread(self.image_path(image_index))
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)        
         return image
 
     def load_annotations(self, image_index):
