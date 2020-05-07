@@ -309,7 +309,7 @@ def main(args=None):
         os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 
     # K.set_session(get_session())
-
+    print("Num_classes: ",num_classes)
     model, prediction_model = efficientdet(args.phi,
                                            num_classes=num_classes,
                                            num_anchors=num_anchors,
@@ -330,7 +330,7 @@ def main(args=None):
             model.load_weights(weights_path, by_name=True)
         else:
             print('Loading model, this may take a second...')
-            model.load_weights(args.snapshot, by_name=True)
+            model.load_weights(args.snapshot, by_name=True,skip_mismatch=True)
 
     # freeze backbone layers
     if args.freeze_backbone:
