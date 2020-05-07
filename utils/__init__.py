@@ -84,29 +84,31 @@ def init_tfkeras_custom_objects():
     tfkeras.utils.get_custom_objects().update(custom_objects)
 
 
-def preprocess_image(image, image_size):
+def preprocess_image(image, image_size=-1):
     # image, RGB
     image_height, image_width = image.shape[:2]
-    if image_height > image_width:
-        scale = image_size / image_height
-        resized_height = image_size
-        resized_width = int(image_width * scale)
+    if(image_size>0):
+        if image_height > image_width:
+            scale = image_size / image_height
+            resized_height = image_size
+            resized_width = int(image_width * scale)
+        else:
+            scale = image_size / image_width
+            resized_height = int(image_height * scale)
+            resized_width = image_size
+        image = cv2.resize(image, (resized_width, resized_height))
     else:
-        scale = image_size / image_width
-        resized_height = int(image_height * scale)
-        resized_width = image_size
-
-    image = cv2.resize(image, (resized_width, resized_height))
+        scale=-1
     image = image.astype(np.float32)
     image /= 255.
     mean = [0.485, 0.456, 0.406]
     std = [0.229, 0.224, 0.225]
     image -= mean
     image /= std
-    pad_h = image_size - resized_height
-    pad_w = image_size - resized_width
-    image = np.pad(image, [(0, pad_h), (0, pad_w), (0, 0)], mode='constant')
-
+    if(image_size>0):
+        pad_h = image_size - resized_height
+        pad_w = image_size - resized_width
+        image = np.pad(image, [(0, pad_h), (0, pad_w), (0, 0)], mode='constant')
     return image, scale
 
 
